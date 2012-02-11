@@ -1,0 +1,1 @@
+nuget\nuget.exe pack ...\packages\FortuneCookie.PropertySecurity.nuspec

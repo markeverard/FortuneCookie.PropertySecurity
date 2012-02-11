@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FortuneCookie.PropertySecurity", "FortuneCookie.PropertySecurity\FortuneCookie.PropertySecurity.csproj", "{68643EAC-A826-4BC2-854C-3B44DE5C2332}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FortuneCookie.PropertySecurity.Test", "FortuneCookie.PropertySecurity.Test\FortuneCookie.PropertySecurity.Test.csproj", "{E448EC04-F1C6-4B3E-B55D-56900793C9B9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{68643EAC-A826-4BC2-854C-3B44DE5C2332}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68643EAC-A826-4BC2-854C-3B44DE5C2332}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68643EAC-A826-4BC2-854C-3B44DE5C2332}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68643EAC-A826-4BC2-854C-3B44DE5C2332}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E448EC04-F1C6-4B3E-B55D-56900793C9B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E448EC04-F1C6-4B3E-B55D-56900793C9B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E448EC04-F1C6-4B3E-B55D-56900793C9B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E448EC04-F1C6-4B3E-B55D-56900793C9B9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
