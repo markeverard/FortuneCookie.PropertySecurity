@@ -8,8 +8,8 @@
     <projectUrl>http://personalization.codeplex.com</projectUrl>
     <iconUrl>http://www.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=personalization&amp;DownloadId=237158</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>The PropertySecurity module for EPiServer allows developer managed user and role based security for individual page properties, using attributes placed on PageTypeBuilder strongly typed page types.</description>
-    <summary>The PropertySecurity module for EPiServer allows developer managed user and role based security for individual page properties, using attributes placed on PageTypeBuilder strongly typed page types.</summary>
+    <description>The PropertySecurity module for EPiServer allows developer controlled user and role based security for individual page properties, using attributes placed on PageTypeBuilder strongly typed page types.</description>
+    <summary>The PropertySecurity module for EPiServer allows developer controlled user and role based security for individual page properties, using attributes placed on PageTypeBuilder strongly typed page types.</summary>
     <language>en-US</language>
 	<files>
 		<file src="bin\Debug\*.dll" target="lib" /> 
