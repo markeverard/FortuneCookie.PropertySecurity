@@ -5,17 +5,15 @@ namespace FortuneCookie.PropertySecurity
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public sealed class AuthorizeAttribute : Attribute
     {
-        public AuthorizeAttribute(string principals)
+        public bool ApplyToDefaultProperties;
+        public string Principals;
+
+        public string[] GetAuthorizedPrincipals()
         {
-            if (string.IsNullOrEmpty(principals))
-            {
-                AuthorizedPrincipals = new[] { string.Empty };
-                return;
-            }
+            if (string.IsNullOrEmpty(Principals))
+                throw new System.ArgumentException("Principal username or role must be set");
 
-            AuthorizedPrincipals = principals.Split(',');
+            return Principals.Split(',');
         }
-
-        public string[] AuthorizedPrincipals { get; private set; }
     }
 }

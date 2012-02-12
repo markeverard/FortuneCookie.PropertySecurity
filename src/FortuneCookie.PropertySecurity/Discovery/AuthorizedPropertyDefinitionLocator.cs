@@ -3,39 +3,69 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using EPiServer.Core;
-using PageTypeBuilder.Reflection;
+using PageTypeBuilder;
 
 namespace FortuneCookie.PropertySecurity.Discovery
 {
+    /// <summary>
+    /// Responsible for finding properties that have had a AuthorizedAttribute placed on them
+    /// </summary>
     public class AuthorizedPropertyDefinitionLocator
     {
-        public virtual List<AuthorizedPropertyDefinition> GetPageTypePropertyDefinitions(PageData pageData)
+        public AuthorizedPropertyDefinitionLocator(PageData pageData, Type pageTypeType)
         {
-            var classLevelAttribute = AttributedTypesUtility.GetAttribute<AuthorizeAttribute>(pageData.GetType());
+            PageData = pageData;
+            PageTypeType = pageTypeType;
+            ClassAttribute = AttributedTypesUtility.GetAttributeFromType<AuthorizeAttribute>(PageTypeType);
+            Properties = AttributedTypesUtility.GetPublicOrPrivateProperties(PageTypeType);
+        }
 
-            PropertyInfo[] properties = pageData.GetType().GetPublicOrPrivateProperties();
-            var authorizedPropertyDefinitions = new List<AuthorizedPropertyDefinition>();
+        protected PageData PageData { get; set; }
+        protected Type PageTypeType { get; set; }
+        protected AuthorizeAttribute ClassAttribute { get; set; }
+        protected bool HasClassLevelAttribute { get { return ClassAttribute != null;  } }
+        private PropertyInfo[] Properties { get; set; }
 
-            foreach (PropertyInfo property in properties)
+        public virtual List<AuthorizedPropertyDefinition> GetAuthorizedPropertyDefinitions()
+        {
+            var definitions = new List<AuthorizedPropertyDefinition>();
+            
+            foreach (PropertyInfo property in Properties.Where(AttributedTypesUtility.PropertyHasAttribute<PageTypePropertyAttribute>))
             {
-                AuthorizeAttribute attribute = GetAuthorizeAttribute(property);
-
+                AuthorizeAttribute attribute = AttributedTypesUtility
+                                                    .GetAttributesFromProperty<AuthorizeAttribute>(property)
+                                                    .FirstOrDefault();
                 if (attribute != null)
                 {
-                    authorizedPropertyDefinitions.Add(new AuthorizedPropertyDefinition(property.Name, attribute.AuthorizedPrincipals));
+                    definitions.Add(AuthorizedPropertyDefinitionFactory.Create(property.Name, attribute.GetAuthorizedPrincipals()));
                     continue;
                 }
 
-                if (classLevelAttribute != null)
-                    authorizedPropertyDefinitions.Add(new AuthorizedPropertyDefinition(property.Name, classLevelAttribute.AuthorizedPrincipals));
+                if (HasClassLevelAttribute)
+                    definitions.Add(AuthorizedPropertyDefinitionFactory.Create(property.Name, ClassAttribute.GetAuthorizedPrincipals()));
             }
 
-            return authorizedPropertyDefinitions;
+            if (HasClassLevelAttribute && ClassAttribute.ApplyToDefaultProperties)
+                AddDefaultPropertyValuesToDefinitions(PageData, definitions);
+
+            return definitions;
         }
 
-        internal AuthorizeAttribute GetAuthorizeAttribute(PropertyInfo propertyInfo)
+        private void AddDefaultPropertyValuesToDefinitions(PageData pageData, List<AuthorizedPropertyDefinition> definitions)
         {
-            return propertyInfo.GetCustomAttributes<AuthorizeAttribute>().FirstOrDefault();
+            foreach (var property in pageData.Property)
+            {
+                if (definitions.FirstOrDefault(d => d.PropertyName == property.Name) != null)
+                    continue;
+
+                definitions.Add(AuthorizedPropertyDefinitionFactory.Create(property.Name, ClassAttribute.GetAuthorizedPrincipals()));
+            }
+        }
+
+        private static bool DefinitionsContainsPropertyName(IEnumerable<AuthorizedPropertyDefinition> definitions, string propertyName)
+        {
+            return definitions.FirstOrDefault(d => d.PropertyName == propertyName) != null;
         }
     }
+
 }

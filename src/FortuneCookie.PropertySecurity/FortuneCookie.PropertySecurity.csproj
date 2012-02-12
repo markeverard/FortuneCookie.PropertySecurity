@@ -161,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AuthorizeAttribute.cs" />
+    <Compile Include="Discovery\AuthorizedPropertyDefinitionFactory.cs" />
     <Compile Include="Discovery\AuthorizedPropertyDefinitionLocator.cs" />
     <Compile Include="Discovery\AuthorizedPropertyDefinition.cs" />
     <Compile Include="Extensions\SecurityPrincipalExtensions.cs" />
@@ -178,5 +179,4 @@
   </Target>
   <Target Name="AfterBuild">
   </Target>-->
-
 </Project>

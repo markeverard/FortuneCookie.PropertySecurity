@@ -1,1 +1,1 @@
-nuget\nuget.exe pack ...\packages\FortuneCookie.PropertySecurity.nuspec
+nuget\nuget.exe pack ..\packages\FortuneCookie.PropertySecurity.nuspec -OutputDirectory ..\packages

@@ -1,4 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Web;
+using EPiServer.Core;
 using EPiServer.Framework;
 using EPiServer.Framework.Initialization;
 using EPiServer.UI.Edit;
@@ -27,16 +31,31 @@ namespace FortuneCookie.PropertySecurity
 
         private void EditPanel_LoadedPage(EditPanel sender, LoadedPageEventArgs e)
         {
-            var typedPage = PageTypeBuilder.PageTypeResolver.Instance.ConvertToTyped(e.Page);
-          
-            var authorisedPropertyDefinitions = new AuthorizedPropertyDefinitionLocator().GetPageTypePropertyDefinitions(typedPage);
-            
             var currentUser = HttpContext.Current.User;
             if (currentUser == null)
                 return;
 
-            foreach (var definition in authorisedPropertyDefinitions)
-                e.Page.Property[definition.PropertyName].DisplayEditUI = currentUser.IsInAnyRole(definition.AuthorizedPrincipals);
+            PageData typedPage = PageTypeBuilder.PageTypeResolver.Instance.ConvertToTyped(e.Page);
+            Type typedPageType = PageTypeBuilder.PageTypeResolver.Instance.GetPageTypeType(e.Page.PageTypeID);
+            var locator = new AuthorizedPropertyDefinitionLocator(typedPage, typedPageType);
+
+            List<AuthorizedPropertyDefinition> definitions = locator.GetAuthorizedPropertyDefinitions();
+
+            foreach (var definition in definitions)
+            {
+                if (e.Page.Property[definition.PropertyName] == null)
+                    continue;
+
+                e.Page.Property[definition.PropertyName].DisplayEditUI =
+                    currentUser.IsInAnyRoleOrUserList(definition.AuthorizedPrincipals);
+            }
+
+            foreach (var property in e.Page.Property)
+            {
+                if (property.DisplayEditUI)
+                    Debug.WriteLine(property.Name);
+            }
+
         }
 
         /// <summary>

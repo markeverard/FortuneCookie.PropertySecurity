@@ -4,7 +4,7 @@ namespace FortuneCookie.PropertySecurity.Discovery
 {
     public class AuthorizedPropertyDefinition
     {
-        public AuthorizedPropertyDefinition(string propertyName, IList<string> authorizedPrincipals)
+        internal AuthorizedPropertyDefinition(string propertyName, IList<string> authorizedPrincipals)
         {
             PropertyName = propertyName;
             AuthorizedPrincipals = authorizedPrincipals;

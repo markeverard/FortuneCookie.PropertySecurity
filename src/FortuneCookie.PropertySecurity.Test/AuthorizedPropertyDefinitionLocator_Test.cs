@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 using FortuneCookie.PropertySecurity.Discovery;
 using NUnit.Framework;
 
@@ -18,7 +19,6 @@ namespace FortuneCookie.PropertySecurity.Test
         [SetUp] 
         public void Setup()
         {
-            _locator = new AuthorizedPropertyDefinitionLocator();
             _classLevel = new ClassAuthorizedFakeTypedPageData();
             _propertyLevel = new PropertyAuthorizedTypedPageData();
             _noLevel = new NonAuthorizedTypedPageData();
@@ -28,47 +28,54 @@ namespace FortuneCookie.PropertySecurity.Test
         }
 
         [Test]
-        public void Locator_Should_Discover_FortyTwo_Properties_From_ClassLevelDefaultPageData()
-        {
-            var actualDefinitionList = _locator.GetPageTypePropertyDefinitions(_defaultLevel);
-            Assert.IsTrue(actualDefinitionList.Count == 42);
-        }
-
-        [Test]
         public void Locator_Should_Not_Discover_Definitions_From_NonAuthorizedTypedPageData()
         {
-            var actualDefinitionList = _locator.GetPageTypePropertyDefinitions(_noLevel);
+            _locator = new AuthorizedPropertyDefinitionLocator(_noLevel, _noLevel.GetType());
+            var actualDefinitionList = _locator.GetAuthorizedPropertyDefinitions();
             Assert.IsTrue(!actualDefinitionList.Any());
         }
 
         [Test]
         public void Locator_Should_Discover_Two_Definitions_From_ClassAuthorizedFakeTypedPageData()
         {
-            var actualDefinitionList = _locator.GetPageTypePropertyDefinitions(_classLevel);
-            Assert.IsTrue(actualDefinitionList.Count == 2 + _defaultPropertyCount);
+            _locator = new AuthorizedPropertyDefinitionLocator(_classLevel, _classLevel.GetType());
+            var actualDefinitionList = _locator.GetAuthorizedPropertyDefinitions();
+            Assert.IsTrue(actualDefinitionList.Count == 2);
         }
 
         [Test]
         public void Locator_Should_Discover_Three_Definitions_From_PropertyAuthorizedTypedPageData()
         {
-            var actualDefinitionList = _locator.GetPageTypePropertyDefinitions(_propertyLevel);
+            _locator = new AuthorizedPropertyDefinitionLocator(_propertyLevel, _propertyLevel.GetType());
+            var actualDefinitionList = _locator.GetAuthorizedPropertyDefinitions();
             Assert.IsTrue(actualDefinitionList.Count == 3);
         }
 
         [Test]
         public void Locator_Should_Discover_Six_Definitions_From_InheritedAuthorizedTypedPageData()
         {
-            var actualDefinitionList = _locator.GetPageTypePropertyDefinitions(_inheritedLevel);
-            Assert.IsTrue(actualDefinitionList.Count == 6 + _defaultPropertyCount);
+            _locator = new AuthorizedPropertyDefinitionLocator(_inheritedLevel, _inheritedLevel.GetType());
+            var actualDefinitionList = _locator.GetAuthorizedPropertyDefinitions();
+            Assert.IsTrue(actualDefinitionList.Count == 6);
         }
 
         [Test]
         public void Located_PropertyAttribute_Should_Override_Class_Attribute()
         {
-            var actualDefinitionList = _locator.GetPageTypePropertyDefinitions(_inheritedLevel);
+            _locator = new AuthorizedPropertyDefinitionLocator(_inheritedLevel, _inheritedLevel.GetType());
+            var actualDefinitionList = _locator.GetAuthorizedPropertyDefinitions();
             var propertyThreeDefinition = actualDefinitionList.Single(d => d.PropertyName == "Property3");
             Assert.IsTrue(propertyThreeDefinition.AuthorizedPrincipals.Contains("Role2"));
         }
+
+        [Test]
+        public void Locater_Should_Discover__DefaultProperties_If_From_DefaultAuthorizedPageData()
+        {
+            _locator = new AuthorizedPropertyDefinitionLocator(_defaultLevel, _defaultLevel.GetType());
+            var actualDefinitionList = _locator.GetAuthorizedPropertyDefinitions();
+            Assert.IsTrue(actualDefinitionList.Count == 1);
+        }
+
 
     }
 }
