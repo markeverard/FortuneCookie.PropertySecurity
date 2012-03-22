@@ -12,6 +12,7 @@
     <AssemblyName>FortuneCookie.PropertySecurity</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -164,6 +165,7 @@
     <Compile Include="Discovery\AuthorizedPropertyDefinitionFactory.cs" />
     <Compile Include="Discovery\AuthorizedPropertyDefinitionLocator.cs" />
     <Compile Include="Discovery\AuthorizedPropertyDefinition.cs" />
+    <Compile Include="Discovery\TabLocator.cs" />
     <Compile Include="Extensions\SecurityPrincipalExtensions.cs" />
     <Compile Include="Initialization.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -171,6 +173,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Notes.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
