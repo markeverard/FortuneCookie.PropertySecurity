@@ -3,7 +3,7 @@ using PageTypeBuilder;
 
 namespace FortuneCookie.PropertySecurity.Test
 {
-    [Authorize(Principals = "Role1", ApplyToDefaultProperties = true)]
+    [Authorize(Principals = "Role1")]
     public class DefaultAuthorizedPageData : TypedPageData
     {
         
@@ -111,7 +111,7 @@ namespace FortuneCookie.PropertySecurity.Test
         }
     }
 
-    [Authorize(Principals = "Role2", ApplyToDefaultProperties = true)]
+    [Authorize(Principals = "Role2")]
     public class InformationTab : Tab
     {
         public override string Name

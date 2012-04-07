@@ -46,9 +46,6 @@ namespace FortuneCookie.PropertySecurity.Discovery
             AddPageTypePropertyGroupDefinitions(tabDefinitions, definitions);
             AddTabAssociatedProperyValuesToDefinitions(PageData, definitions, tabDefinitions);
 
-            if (HasClassLevelAttribute && ClassAttribute.ApplyToDefaultProperties)
-                AddDefaultPropertyValuesToDefinitions(PageData, definitions);
-
             return definitions;
         }
 
@@ -154,24 +151,8 @@ namespace FortuneCookie.PropertySecurity.Discovery
                 if (tabClassAttribute == null) 
                     continue;
 
-                if (!tabClassAttribute.ApplyToDefaultProperties)
-                    continue;
-                
                 definitions.Add(AuthorizedPropertyDefinitionFactory.Create(property.Name, tabClassAttribute.GetAuthorizedPrincipals()));
             }
         }
-
-        private void AddDefaultPropertyValuesToDefinitions(PageData pageData, ICollection<AuthorizedPropertyDefinition> definitions)
-        {
-            foreach (var property in pageData.Property)
-            {
-                if (definitions.Any(d => d.PropertyName == property.Name))
-                    continue;
-
-                definitions.Add(AuthorizedPropertyDefinitionFactory.Create(property.Name, ClassAttribute.GetAuthorizedPrincipals()));
-            }
-        }
-
     }
-
 }

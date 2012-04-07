@@ -5,7 +5,6 @@ namespace FortuneCookie.PropertySecurity
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public sealed class AuthorizeAttribute : Attribute
     {
-        public bool ApplyToDefaultProperties;
         public string Principals;
 
         public string[] GetAuthorizedPrincipals()
