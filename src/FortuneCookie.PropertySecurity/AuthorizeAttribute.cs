@@ -11,7 +11,7 @@ namespace FortuneCookie.PropertySecurity
         public string[] GetAuthorizedPrincipals()
         {
             if (string.IsNullOrEmpty(Principals))
-                throw new System.ArgumentException("Principal username or role must be set");
+                throw new ArgumentException("Principal username or role must be set");
 
             return Principals.Split(',');
         }

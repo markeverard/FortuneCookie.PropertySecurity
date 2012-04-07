@@ -8,6 +8,7 @@ using EPiServer.Framework.Initialization;
 using EPiServer.UI.Edit;
 using FortuneCookie.PropertySecurity.Discovery;
 using FortuneCookie.PropertySecurity.Extensions;
+using PageTypeBuilder.Abstractions;
 
 namespace FortuneCookie.PropertySecurity
 {
@@ -37,7 +38,11 @@ namespace FortuneCookie.PropertySecurity
 
             PageData typedPage = PageTypeBuilder.PageTypeResolver.Instance.ConvertToTyped(e.Page);
             Type typedPageType = PageTypeBuilder.PageTypeResolver.Instance.GetPageTypeType(e.Page.PageTypeID);
-            var locator = new AuthorizedPropertyDefinitionLocator(typedPage, typedPageType);
+
+            if (typedPageType == null)
+                return;
+
+            var locator = new AuthorizedPropertyDefinitionLocator(typedPage, typedPageType, new TabDefinitionRepository());
 
             List<AuthorizedPropertyDefinition> definitions = locator.GetAuthorizedPropertyDefinitions();
 

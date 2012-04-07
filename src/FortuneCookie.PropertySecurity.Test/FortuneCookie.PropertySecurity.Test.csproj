@@ -12,6 +12,7 @@
     <AssemblyName>FortuneCookie.PropertySecurity.Test</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -144,11 +145,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AuthorizedPropertyDefinitionLocator_Test.cs" />
+    <Compile Include="FakeTabDefinitionRepository.cs" />
     <Compile Include="FakeTypedPageData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SecurityPrincipal_Extensions_Test.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
