@@ -73,23 +73,27 @@ namespace FortuneCookie.PropertySecurity.Test
         [Test]
         public void Locator_Should_Discover_Two_Definitions_From_TabAuthorizedTypedPageData()
         {
-            TabAuthorizedTypedPageData typedPageData = new TabAuthorizedTypedPageData();
-
+            var typedPageData = new TabAuthorizedTypedPageData();
             TabDefinitionCollection tabDefinitions = new FakeTabDefinitionRepository().List();
             typedPageData.Property.Add(new PropertyString
                                            {
                                                Name = "PageName",
-                                               OwnerTab = tabDefinitions.First(t => t.Name == "Information").ID
+                                               OwnerTab = tabDefinitions.First(t => t.Name == "MetaData").ID
                                            });
 
             SetupTabBasedPropertiesAndPropertyGroupPageDataProperties(typedPageData);
+
             _locator = new AuthorizedPropertyDefinitionLocator(typedPageData, typedPageData.GetType(), new FakeTabDefinitionRepository());
             var actualDefinitionList = _locator.GetAuthorizedPropertyDefinitions();
             Assert.IsTrue(actualDefinitionList.Count == 2);
-            var propertyOneDefinition = actualDefinitionList.Single(d => d.PropertyName == "Property1");
-            Assert.IsTrue(propertyOneDefinition.AuthorizedPrincipals.Contains("Role1"));
-            var pageCategoryDefinition = actualDefinitionList.Single(d => d.PropertyName == "PageName");
-            Assert.IsTrue(pageCategoryDefinition.AuthorizedPrincipals.Contains("Role2"));
+            
+            //This is testing differnet functionality - should be a different test
+            //var propertyOneDefinition = actualDefinitionList.Single(d => d.PropertyName == "Property1");
+            //Assert.IsTrue(propertyOneDefinition.AuthorizedPrincipals.Contains("Role1"));
+
+            //This is testing differnet functionality - should be a different test
+            //var pageCategoryDefinition = actualDefinitionList.Single(d => d.PropertyName == "PageName");
+            //Assert.IsTrue(pageCategoryDefinition.AuthorizedPrincipals.Contains("Role2"));
         }
 
         #endregion Tab related tests
@@ -102,10 +106,9 @@ namespace FortuneCookie.PropertySecurity.Test
             PropertyGroupAuthorizedTypedPageData typedPageData = new PropertyGroupAuthorizedTypedPageData();
             SetupTabBasedPropertiesAndPropertyGroupPageDataProperties(typedPageData);
             _locator = new AuthorizedPropertyDefinitionLocator(typedPageData, typedPageData.GetType(), new FakeTabDefinitionRepository());
+            
             var actualDefinitionList = _locator.GetAuthorizedPropertyDefinitions();
             Assert.IsTrue(actualDefinitionList.Count == 1);
-            var propertyOneDefinition = actualDefinitionList.Single(d => d.PropertyName == "PropertyGroup1-Property1");
-            Assert.IsTrue(propertyOneDefinition.AuthorizedPrincipals.Contains("Role1"));
         }
 
         [Test]
@@ -118,9 +121,6 @@ namespace FortuneCookie.PropertySecurity.Test
             
             var actualDefinitionList = _locator.GetAuthorizedPropertyDefinitions();
             Assert.IsTrue(actualDefinitionList.Count == 1);
-            
-            //var propertyOneDefinition = actualDefinitionList.Single(d => d.PropertyName == "PropertyGroup1-Property1");
-            //Assert.IsTrue(propertyOneDefinition.AuthorizedPrincipals.Contains("Role1"));
         }
 
         [Test]
@@ -128,26 +128,100 @@ namespace FortuneCookie.PropertySecurity.Test
         {
             PropertyGroupWithPropertyGroupLevelAuthorizedTypedPageData typedPageData = new PropertyGroupWithPropertyGroupLevelAuthorizedTypedPageData();
             SetupTabBasedPropertiesAndPropertyGroupPageDataProperties(typedPageData);
+            
             _locator = new AuthorizedPropertyDefinitionLocator(typedPageData, typedPageData.GetType(), new FakeTabDefinitionRepository());
+            
             var actualDefinitionList = _locator.GetAuthorizedPropertyDefinitions();
             Assert.IsTrue(actualDefinitionList.Count == 1);
-            var propertyOneDefinition = actualDefinitionList.Single(d => d.PropertyName == "PropertyGroup1-Property1");
-            Assert.IsTrue(propertyOneDefinition.AuthorizedPrincipals.Contains("Role2"));
         }
 
         [Test]
         public void Locator_Should_Discover_One_Definition_From_PropertyGroupWithTabAuthorizationAuthorizedTypedPageData()
         {
-            PropertyGroupWithTabAuthorizationAuthorizedTypedPageData typedPageData = new PropertyGroupWithTabAuthorizationAuthorizedTypedPageData();
+            var typedPageData = new PropertyGroupWithTabAuthorizationAuthorizedTypedPageData();
             SetupTabBasedPropertiesAndPropertyGroupPageDataProperties(typedPageData);
+            
             _locator = new AuthorizedPropertyDefinitionLocator(typedPageData, typedPageData.GetType(), new FakeTabDefinitionRepository());
+            
             var actualDefinitionList = _locator.GetAuthorizedPropertyDefinitions();
             Assert.IsTrue(actualDefinitionList.Count == 1);
-            var propertyOneDefinition = actualDefinitionList.Single(d => d.PropertyName == "PropertyGroup1-Property1");
-            Assert.IsTrue(propertyOneDefinition.AuthorizedPrincipals.Contains("Role1"));   
         }
 
         #endregion Property group related tests
+
+
+        [Test]
+        public void Locator_Should_Discover_One_Definition_From_ClassPropertyGroupAndTabDefinitionTypedPageData()
+        {
+            var typedPageData = new ClassPropertyGroupAndTabDefinitionTypedPageData();
+            SetupTabBasedPropertiesAndPropertyGroupPageDataProperties(typedPageData);
+
+            _locator = new AuthorizedPropertyDefinitionLocator(typedPageData, typedPageData.GetType(), new FakeTabDefinitionRepository());
+
+            var actualDefinitionList = _locator.GetAuthorizedPropertyDefinitions();
+            Assert.IsTrue(actualDefinitionList.Count == 1);
+        }
+
+        [Test]
+        public void Should_Find_Definition_From_PropertyGroup_For_ClassPropertyGroupAndTabDefinitionTypedPageData()
+        {
+            var typedPageData = new ClassPropertyGroupAndTabDefinitionTypedPageData();
+            SetupTabBasedPropertiesAndPropertyGroupPageDataProperties(typedPageData);
+
+            _locator = new AuthorizedPropertyDefinitionLocator(typedPageData, typedPageData.GetType(), new FakeTabDefinitionRepository());
+
+            var actualDefinitionList = _locator.GetAuthorizedPropertyDefinitions();
+            Assert.IsTrue(actualDefinitionList.First().AuthorizedPrincipals.Contains("RolePropertyGroup"));
+        }
+
+        [Test]
+        public void Should_Find_Definition_From_PropertyGroupProperty_For_ClassPropertyGroupTypedPageData()
+        {
+            var typedPageData = new ClassPropertyGroupTypedPageData();
+            SetupTabBasedPropertiesAndPropertyGroupPageDataProperties(typedPageData);
+
+            _locator = new AuthorizedPropertyDefinitionLocator(typedPageData, typedPageData.GetType(), new FakeTabDefinitionRepository());
+
+            var actualDefinitionList = _locator.GetAuthorizedPropertyDefinitions();
+            Assert.IsTrue(actualDefinitionList.First().AuthorizedPrincipals.Contains("RolePropertyGroup"));
+        }
+
+        [Test]
+        public void Should_Find_Definition_From_Tab_For_ClassAndTabDefinitionTypedPageData()
+        {
+            var typedPageData = new ClassAndTabDefinitionTypedPageData();
+            SetupTabBasedPropertiesAndPropertyGroupPageDataProperties(typedPageData);
+
+            _locator = new AuthorizedPropertyDefinitionLocator(typedPageData, typedPageData.GetType(), new FakeTabDefinitionRepository());
+
+            var actualDefinitionList = _locator.GetAuthorizedPropertyDefinitions();
+            Assert.IsTrue(actualDefinitionList.First().AuthorizedPrincipals.Contains("Role5"));
+        }
+
+        [Test]
+        public void Should_Find_Definition_From_Tab_For_PropertyGroupWithTabAuthorizationAuthorizedTypedPageData()
+        {
+            var typedPageData = new PropertyGroupWithTabAuthorizationAuthorizedTypedPageData();
+            SetupTabBasedPropertiesAndPropertyGroupPageDataProperties(typedPageData);
+
+            _locator = new AuthorizedPropertyDefinitionLocator(typedPageData, typedPageData.GetType(), new FakeTabDefinitionRepository());
+
+            var actualDefinitionList = _locator.GetAuthorizedPropertyDefinitions();
+            Assert.IsTrue(actualDefinitionList.First().AuthorizedPrincipals.Contains("Role5"));
+        }
+
+
+        [Test]
+        public void Should_Find_Definition_From_Tab_For_ClassPropertyAndTabDefinitionTypedPageData()
+        {
+            var typedPageData = new ClassPropertyAndTabDefinitionTypedPageData();
+            SetupTabBasedPropertiesAndPropertyGroupPageDataProperties(typedPageData);
+
+            _locator = new AuthorizedPropertyDefinitionLocator(typedPageData, typedPageData.GetType(), new FakeTabDefinitionRepository());
+
+            var actualDefinitionList = _locator.GetAuthorizedPropertyDefinitions();
+            Assert.IsTrue(actualDefinitionList.First().AuthorizedPrincipals.Contains("Role5"));
+        }
 
         private void SetupTabBasedPropertiesAndPropertyGroupPageDataProperties(TypedPageData typedPageData)
         {

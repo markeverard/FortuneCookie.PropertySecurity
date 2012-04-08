@@ -25,6 +25,7 @@ namespace FortuneCookie.PropertySecurity.Test
 
         [Authorize(Principals = "Role2"), PageTypeProperty]
         public string Property3 { get; set; }
+        
         [PageTypeProperty]
         public string Property4 { get; set; }
     }
@@ -50,7 +51,7 @@ namespace FortuneCookie.PropertySecurity.Test
 
     public class TabAuthorizedTypedPageData : TypedPageData
     {
-        [PageTypeProperty(Tab = typeof(MetaDataTab))]
+        [PageTypeProperty(Tab = typeof(Role5Tab))]
         public string Property1 { get; set; }
     }
 
@@ -75,13 +76,13 @@ namespace FortuneCookie.PropertySecurity.Test
 
     public class PropertyGroupWithTabAuthorizationAuthorizedTypedPageData : TypedPageData
     {
-        [PageTypePropertyGroup(Tab = typeof(MetaDataTab))]
+        [PageTypePropertyGroup(Tab = typeof(Role5Tab))]
         public PropertyGroupWithoutAuthorization PropertyGroup1 { get; set; }
     }
 
     public class PropertyGroup : PageTypePropertyGroup
     {
-        [Authorize(Principals = "Role1"), PageTypeProperty]
+        [Authorize(Principals = "RolePropertyGroup"), PageTypeProperty]
         public string Property1 { get; set; }
     }
 
@@ -91,9 +92,41 @@ namespace FortuneCookie.PropertySecurity.Test
         public string Property1 { get; set; }
     }
 
+    [Authorize(Principals = "Role3")]
+    public class ClassPropertyGroupAndTabDefinitionTypedPageData : TypedPageData
+    {
+        [Authorize(Principals = "Role2")]
+        [PageTypePropertyGroup(Tab = typeof(Role5Tab))]
+        public PropertyGroup PropertyGroup { get; set; }
 
-    [Authorize(Principals = "Role1")]
-    public class MetaDataTab : Tab
+    }
+
+    [Authorize(Principals = "Role3")]
+    public class ClassPropertyGroupTypedPageData : TypedPageData
+    {
+        [Authorize(Principals = "Role2")]
+        [PageTypePropertyGroup]
+        public PropertyGroup PropertyGroup { get; set; }
+
+    }
+
+    [Authorize(Principals = "Role3")]
+    public class ClassAndTabDefinitionTypedPageData : TypedPageData
+    {
+        [PageTypePropertyGroup(Tab = typeof(Role5Tab))]
+        public PropertyGroupWithoutAuthorization PropertyGroup { get; set; }
+    }
+
+    [Authorize(Principals = "Role3")]
+    public class ClassPropertyAndTabDefinitionTypedPageData : TypedPageData
+    {
+        [Authorize(Principals = "Role10")]
+        [PageTypePropertyGroup(Tab = typeof(Role5Tab))]
+        public PropertyGroupWithoutAuthorization PropertyGroup { get; set; }
+    }
+
+    [Authorize(Principals = "Role5")]
+    public class Role5Tab : Tab
     {
         public override string Name
         {
@@ -110,25 +143,4 @@ namespace FortuneCookie.PropertySecurity.Test
             get { return 100; }
         }
     }
-
-    [Authorize(Principals = "Role2")]
-    public class InformationTab : Tab
-    {
-        public override string Name
-        {
-            get { return "Information"; }
-        }
-
-        public override AccessLevel RequiredAccess
-        {
-            get { return AccessLevel.Edit; }
-        }
-
-        public override int SortIndex
-        {
-            get { return 100; }
-        }
-    }
-
-
 }

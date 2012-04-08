@@ -144,6 +144,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AttributeHierachy_Test.cs" />
     <Compile Include="AuthorizedPropertyDefinitionLocator_Test.cs" />
     <Compile Include="FakeTabDefinitionRepository.cs" />
     <Compile Include="FakeTypedPageData.cs" />
